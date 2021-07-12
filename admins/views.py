@@ -45,4 +45,7 @@ def admin_users_update(request, pk):
 
 
 def admin_users_remove(request, pk):
-    pass
+    user = User.objects.get(id=pk)
+    user.is_active = False
+    user.save()
+    return HttpResponseRedirect(reverse('admins:admin_users'))
