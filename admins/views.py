@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.list import ListView
+from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from users.models import User
@@ -22,6 +23,10 @@ class UserListView(ListView):
         context = super(UserListView, self).get_context_data(object_list=None, **kwargs)
         context['title'] = 'Админ-панель - Пользовтаели'
         return context
+
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserListView, self).dispatch(request, *args, **kwargs)
 
 
 class UserCreateView(CreateView):
